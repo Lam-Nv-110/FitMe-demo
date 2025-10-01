@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Fitme Demo — Chatbot & Try-On</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app" role="application" aria-label="Fitme demo">
+  <!-- CHAT PANEL -->
+  <section class="chat-panel" aria-label="Chatbot">
+    <div class="chat-header">
+      <div>
+        <div class="brand">Fitme Assistant</div>
+        <div class="sub">AI stylist demo · type a question or pick a quick intent</div>
+      </div>
+    </div>
+
+    <div class="messages" id="messages" aria-live="polite"></div>
+
+    <div class="quick" role="toolbar" aria-label="Quick intents">
+      <button class="chip" data-intent="interview">Interview outfit</button>
+      <button class="chip" data-intent="party">Party look</button>
+      <button class="chip" data-intent="casual">Casual weekend</button>
+      <button class="chip" data-intent="travel">Travel outfit</button>
+    </div>
+
+    <div class="controls">
+      <input id="userInput" class="input" type="text" placeholder="Ask: 'What should I wear to a job interview?'" aria-label="Message input"/>
+      <button id="sendBtn" class="btn" aria-label="Send message">Send</button>
+    </div>
+  </section>
+
+  <!-- SIDE: PRODUCTS + TRY-ON -->
+  <aside class="side" aria-label="Products and Try-on">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div style="font-weight:800">Catalog highlights</div>
+        <div class="small">Demo images</div>
+      </div>
+      <div class="products" id="products"></div>
+    </div>
+
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div style="font-weight:800">Try-on (Upload your photo)</div>
+        <div class="small">Demo overlay</div>
+      </div>
+
+      <div class="try-area" id="tryArea" aria-label="Try on area">
+        <div class="canvas" id="canvas">
+          <div style="text-align:center;color:var(--muted)">
+            <div style="font-weight:700">No photo yet</div>
+            <div class="small" style="margin-top:8px">Upload a front-facing photo to try outfits</div>
+          </div>
+          <img id="userPhoto" class="uimg" alt="" style="display:none">
+          <img id="overlayImg" class="overlay" alt="" style="display:none;left:0;top:0">
+        </div>
+
+        <div class="controls-try" style="padding:12px">
+          <label class="small" for="photoUpload">Photo:</label>
+          <input id="photoUpload" type="file" accept="image/*" />
+          <button id="clearPhoto" class="chip" style="margin-left:auto">Clear</button>
+        </div>
+
+        <div class="controls-try" style="padding:0 12px 12px 12px">
+          <label class="small">Overlay size</label>
+          <input id="scaleRange" type="range" min="20" max="200" value="100" />
+          <label class="small" style="margin-left:auto">Opacity</label>
+          <input id="opacityRange" type="range" min="20" max="100" value="95" />
+        </div>
+      </div>
+    </div>
+
+    <div class="note">This demo is client-side only. Chatbot uses simple intent rules for demo purposes.</div>
+  </aside>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
