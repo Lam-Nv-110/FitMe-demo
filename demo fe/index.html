@@ -8,6 +8,40 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+    <!-- FitMe Assistant Chatbot -->
+<div class="fitme-assistant">
+    <div class="assistant-container">
+        <div class="assistant-header">
+            <div class="assistant-avatar">
+                <i class="fas fa-robot"></i>
+            </div>
+            <div class="assistant-info">
+                <h3>FitMe Assistant</h3>
+                <p>Trợ lý stylist AI - Nhập câu hỏi hoặc chọn mục nhanh</p>
+            </div>
+        </div>
+        
+        <div class="assistant-messages">
+            <div class="message bot-message">
+                <p>Xin chào! Tôi là FitMe Assistant — hãy cho tôi biết dịp (phỏng vấn, tiệc, dạo phố, du lịch) hoặc tải ảnh lên để thử đồ ở bên phải.</p>
+            </div>
+        </div>
+        
+        <div class="quick-intents">
+            <button class="intent-btn" data-intent="interview">Tôi nên mặc gì đi phỏng vấn?</button>
+            <button class="intent-btn" data-intent="party">Đồ đi tiệc thế nào?</button>
+            <button class="intent-btn" data-intent="casual">Phong cách dạo phố</button>
+            <button class="intent-btn" data-intent="travel">Đồ du lịch thoải mái</button>
+        </div>
+        
+        <div class="assistant-input">
+            <input type="text" id="assistantInput" placeholder="Nhập câu hỏi của bạn...">
+            <button id="sendAssistantMessage">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+</div>
     <!-- Header -->
     <header class="header">
         <nav class="navbar">
@@ -248,5 +282,6 @@
     <script src="js/main.js"></script>
     <script src="js/ai-tryon.js"></script>
     <script src="js/chatbot.js"></script>
+    <script src="js/assistant.js"></script> 
 </body>
 </html>

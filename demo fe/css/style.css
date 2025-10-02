@@ -787,3 +787,185 @@ img {
         height: 400px;
     }
 }
+/* FitMe Assistant Chatbot */
+.fitme-assistant {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2rem 0;
+    margin-top: 80px; /* Tránh header fixed */
+}
+
+.assistant-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.assistant-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.assistant-avatar {
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.assistant-info h3 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.assistant-info p {
+    margin: 0.25rem 0 0 0;
+    opacity: 0.9;
+}
+
+.assistant-messages {
+    margin-bottom: 1.5rem;
+}
+
+.message {
+    max-width: 80%;
+    padding: 1rem;
+    border-radius: 15px;
+    margin-bottom: 1rem;
+}
+
+.bot-message {
+    background: rgba(255, 255, 255, 0.1);
+    border-top-left-radius: 5px;
+}
+
+.user-message {
+    background: rgba(255, 255, 255, 0.2);
+    border-top-right-radius: 5px;
+    margin-left: auto;
+}
+
+.quick-intents {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.intent-btn {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 0.75rem 1rem;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.intent-btn:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateY(-2px);
+}
+
+.assistant-input {
+    display: flex;
+    gap: 0.5rem;
+}
+
+#assistantInput {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border: none;
+    border-radius: 25px;
+    background: rgba(255, 255, 255, 0.9);
+    font-size: 1rem;
+}
+
+#assistantInput:focus {
+    outline: none;
+    background: white;
+}
+
+#sendAssistantMessage {
+    background: var(--accent-color);
+    color: var(--dark-color);
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#sendAssistantMessage:hover {
+    background: #ffd700;
+    transform: scale(1.05);
+}
+
+/* Suggested Outfits */
+.suggested-outfits {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin: 1rem 0;
+}
+
+.outfit-suggestion {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 1rem;
+    border-radius: 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.outfit-suggestion:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-3px);
+}
+
+.outfit-suggestion img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+}
+
+.outfit-suggestion p {
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .fitme-assistant {
+        margin-top: 120px;
+        padding: 1rem 0;
+    }
+    
+    .assistant-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.5rem;
+    }
+    
+    .quick-intents {
+        grid-template-columns: 1fr;
+    }
+    
+    .message {
+        max-width: 90%;
+    }
+}
