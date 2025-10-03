@@ -184,3 +184,48 @@ function performTryOn() {
         `;
     }, 2000);
 }
+function loadOutfits(category) {
+    const outfitGrid = document.getElementById('outfitGrid');
+    
+    if (!outfitGrid) return;
+    
+    // Filter outfits by category
+    let filteredOutfits = outfitsData;
+    if (category !== 'all') {
+        filteredOutfits = outfitsData.filter(outfit => outfit.category === category);
+    }
+    
+    // Render outfits
+    outfitGrid.innerHTML = '';
+    
+    filteredOutfits.forEach(outfit => {
+        const outfitItem = document.createElement('div');
+        outfitItem.className = 'outfit-item';
+        outfitItem.setAttribute('data-outfit-id', outfit.id);
+        outfitItem.innerHTML = `
+            <div class="outfit-image">
+                <img src="${outfit.image}" alt="${outfit.name}" loading="lazy">
+                <div class="outfit-overlay">
+                    <button class="btn-select-outfit">Chọn</button>
+                </div>
+            </div>
+            <div class="outfit-info">
+                <p>${outfit.name}</p>
+                <span class="outfit-price">${outfit.price}</span>
+            </div>
+        `;
+        
+        // Add click event to select outfit
+        outfitItem.addEventListener('click', function() {
+            // Remove selected class from all items
+            document.querySelectorAll('.outfit-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            
+            // Add selected class to clicked item
+            this.classList.add('selected');
+        });
+        
+        outfitGrid.appendChild(outfitItem);
+    });
+}

@@ -200,3 +200,166 @@ function initTrends() {
         });
     });
 }
+// Products data với ảnh
+const productsData = [
+    {
+        id: 1,
+        name: 'Áo thun basic',
+        price: '199,000₫',
+        image: 'images/products/ao-thun-basic.jpg',
+        category: 'tops',
+        badge: 'Mới'
+    },
+    {
+        id: 2,
+        name: 'Quần jeans slim',
+        price: '499,000₫',
+        image: 'images/products/quan-jeans-slim.jpg',
+        category: 'bottoms',
+        badge: '-20%',
+        oldPrice: '599,000₫'
+    },
+    {
+        id: 3,
+        name: 'Đầm maxi hoa',
+        price: '699,000₫',
+        image: 'images/products/dam-maxi-hoa.jpg',
+        category: 'dresses',
+        badge: 'Bán chạy'
+    },
+    {
+        id: 4,
+        name: 'Áo khoác denim',
+        price: '799,000₫',
+        image: 'images/products/ao-khoac-denim.jpg',
+        category: 'tops'
+    },
+    {
+        id: 5,
+        name: 'Váy công sở',
+        price: '599,000₫',
+        image: 'images/products/vay-cong-so.jpg',
+        category: 'dresses'
+    },
+    {
+        id: 6,
+        name: 'Túi xách da',
+        price: '399,000₫',
+        image: 'images/products/tui-xach-da.jpg',
+        category: 'accessories'
+    }
+];
+
+// Outfits data với ảnh
+const outfitsData = [
+    {
+        id: 1,
+        name: 'Áo Blazer Navy',
+        price: '799,000₫',
+        image: 'images/outfits/ao-blazer-navy.jpg',
+        category: 'tops'
+    },
+    {
+        id: 2,
+        name: 'Áo sơ mi trắng',
+        price: '299,000₫',
+        image: 'images/outfits/ao-so-mi-trang.jpg',
+        category: 'tops'
+    },
+    {
+        id: 3,
+        name: 'Quần tây xám',
+        price: '459,000₫',
+        image: 'images/outfits/quan-tay-xam.jpg',
+        category: 'bottoms'
+    },
+    {
+        id: 4,
+        name: 'Đầm body đen',
+        price: '659,000₫',
+        image: 'images/outfits/dress-body-den.jpg',
+        category: 'dresses'
+    },
+    {
+        id: 5,
+        name: 'Quần shorts kaki',
+        price: '359,000₫',
+        image: 'images/outfits/quan-shorts-kaki.jpg',
+        category: 'bottoms'
+    },
+    {
+        id: 6,
+        name: 'Vòng cổ bạc',
+        price: '199,000₫',
+        image: 'images/outfits/vong-co-bac.jpg',
+        category: 'accessories'
+    }
+];
+
+// Trends data với ảnh
+const trendsData = [
+    {
+        id: 1,
+        title: 'Phong cách tối giản',
+        description: 'Đơn giản nhưng không kém phần thời thượng',
+        image: 'images/trend1.jpg'
+    },
+    {
+        id: 2,
+        title: 'Streetwear nổi bật',
+        description: 'Phong cách đường phố cá tính',
+        image: 'images/trend2.jpg'
+    },
+    {
+        id: 3,
+        title: 'Vintage cổ điển',
+        description: 'Hoài cổ nhưng vẫn hiện đại',
+        image: 'images/trend3.jpg'
+    }
+];
+
+// Cập nhật hàm initProducts
+function initProducts() {
+    const productsGrid = document.getElementById('productsGrid');
+    
+    if (productsGrid) {
+        renderProducts(productsData, productsGrid);
+        
+        // Add to cart functionality
+        const addToCartButtons = document.querySelectorAll('.btn-add-to-cart');
+        addToCartButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const productId = this.getAttribute('data-product-id');
+                addToCart(productId);
+            });
+        });
+    }
+}
+
+// Cập nhật hàm renderProducts
+function renderProducts(products, container) {
+    container.innerHTML = '';
+    
+    products.forEach(product => {
+        const productCard = document.createElement('div');
+        productCard.className = 'product-card';
+        productCard.innerHTML = `
+            <div class="product-image">
+                <img src="${product.image}" alt="${product.name}" loading="lazy">
+                ${product.badge ? `<div class="product-badge">${product.badge}</div>` : ''}
+            </div>
+            <div class="product-info">
+                <h3 class="product-name">${product.name}</h3>
+                <p class="product-price">
+                    ${product.price}
+                    ${product.oldPrice ? `<span class="old-price">${product.oldPrice}</span>` : ''}
+                </p>
+                <div class="product-actions">
+                    <button class="btn-add-to-cart" data-product-id="${product.id}">Thêm vào giỏ</button>
+                    <button class="btn-view-details">Xem chi tiết</button>
+                </div>
+            </div>
+        `;
+        container.appendChild(productCard);
+    });
+}
