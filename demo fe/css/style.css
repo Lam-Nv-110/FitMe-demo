@@ -1137,3 +1137,130 @@ img {
 img[src=""] {
     opacity: 0;
 }
+/* Trend Images - Vertical Full Body */
+.trend-image {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 2/3; /* Tỷ lệ 2:3 thay vì 3:2 */
+    overflow: hidden;
+    border-radius: 8px 8px 0 0;
+}
+
+.trend-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top; /* Focus on upper body */
+}
+
+.trend-card {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.trend-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.trend-content {
+    padding: 1.5rem;
+}
+
+.trend-content h3 {
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+    color: var(--dark-color);
+}
+
+.trend-content p {
+    color: var(--gray-color);
+    margin-bottom: 1rem;
+    line-height: 1.5;
+}
+
+.trend-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--primary-color);
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.trend-link:hover {
+    gap: 0.75rem;
+    color: #ff5252;
+}
+
+.trend-link::after {
+    content: '→';
+    transition: transform 0.3s ease;
+}
+
+.trend-link:hover::after {
+    transform: translateX(3px);
+}
+/* Trend Images - Hiển thị toàn bộ ảnh không crop */
+.trend-image {
+    position: relative;
+    width: 100%;
+    height: 300px; /* Fixed height để đồng đều */
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f8f9fa;
+}
+
+.trend-image img {
+    width: auto;
+    height: 100%;
+    max-width: 100%;
+    object-fit: contain; /* Hiển thị toàn bộ ảnh không crop */
+    object-position: center center;
+}
+
+.trend-card {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    background: white;
+    display: flex;
+    flex-direction: column;
+}
+
+.trend-content {
+    padding: 1.5rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.trend-content h3 {
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+    color: var(--dark-color);
+}
+
+.trend-content p {
+    color: var(--gray-color);
+    margin-bottom: 1rem;
+    line-height: 1.5;
+    flex-grow: 1;
+}
+
+.trend-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--primary-color);
+    font-weight: 600;
+    text-decoration: none;
+    margin-top: auto;
+}
