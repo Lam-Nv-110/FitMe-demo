@@ -9,7 +9,7 @@
 </head>
 <body>
     <!-- FitMe Assistant Chatbot -->
-<div class="fitme-assistant">
+<!-- <div class="fitme-assistant">
     <div class="assistant-container">
         <div class="assistant-header">
             <div class="assistant-avatar">
@@ -41,7 +41,7 @@
             </button>
         </div>
     </div>
-</div>
+</div> -->
     <!-- Header -->
     <header class="header">
         <nav class="navbar">
@@ -214,30 +214,94 @@
     </section>
 
     <!-- Chatbot -->
-    <div class="chatbot-container">
-        <div class="chatbot-icon" id="chatbotIcon">
-            <i class="fas fa-robot"></i>
-        </div>
-        <div class="chatbot-window" id="chatbotWindow">
-            <div class="chatbot-header">
-                <h3>Trợ lý ảo Lumi</h3>
-                <button class="btn-close" id="closeChatbot">
-                    <i class="fas fa-times"></i>
-                </button>
+<div class="chatbot-container">
+    <div class="chatbot-icon" id="chatbotIcon">
+        <img src="images/chatbot-logo.png" alt="Trợ lý ảo Lumi" class="chatbot-logo">
+    </div>
+    <div class="chatbot-window" id="chatbotWindow">
+        <div class="chatbot-header">
+            <div class="chatbot-avatar">
+                <img src="images/chatbot-logo.png" alt="Lumi Avatar" class="chatbot-avatar-img">
             </div>
-            <div class="chatbot-messages" id="chatbotMessages">
-                <div class="message bot-message">
-                    <p>Xin chào! Tôi là Lumi - trợ lý ảo của FitMe. Tôi có thể giúp gì cho bạn?</p>
+            <div class="chatbot-info">
+                <h3>Trợ lý ảo Lumi</h3>
+                <p>Đang trực tuyến</p>
+            </div>
+            <button class="btn-close" id="closeChatbot">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="chatbot-messages" id="chatbotMessages">
+            <div class="message bot-message">
+                <p>Xin chào! Tôi là Lumi - trợ lý ảo của FitMe. Tôi có thể giúp gì cho bạn?</p>
+            </div>
+        </div>
+
+        <!-- Thêm quick suggestions -->
+        <div class="chatbot-suggestions">
+            <div class="suggestion-category">
+                <h4>🎯 Gợi ý nhanh</h4>
+                <div class="suggestion-buttons">
+                    <button class="suggestion-btn" data-event="interview">
+                        <i class="fas fa-briefcase"></i>
+                        Phỏng vấn
+                    </button>
+                    <button class="suggestion-btn" data-event="date">
+                        <i class="fas fa-heart"></i>
+                        Hẹn hò
+                    </button>
+                    <button class="suggestion-btn" data-event="party">
+                        <i class="fas fa-glass-cheers"></i>
+                        Tiệc tối
+                    </button>
                 </div>
             </div>
-            <div class="chatbot-input">
-                <input type="text" id="chatbotInput" placeholder="Nhập câu hỏi của bạn...">
-                <button id="sendMessage">
-                    <i class="fas fa-paper-plane"></i>
-                </button>
+            
+            <div class="suggestion-category">
+                <h4>🛍️ Dịp khác</h4>
+                <div class="suggestion-buttons">
+                    <button class="suggestion-btn" data-event="casual">
+                        <i class="fas fa-tshirt"></i>
+                        Dạo phố
+                    </button>
+                    <button class="suggestion-btn" data-event="travel">
+                        <i class="fas fa-suitcase"></i>
+                        Du lịch
+                    </button>
+                    <button class="suggestion-btn" data-event="wedding">
+                        <i class="fas fa-ring"></i>
+                        Đám cưới
+                    </button>
+                </div>
+            </div>
+            
+            <div class="suggestion-category">
+                <h4>🌤️ Thời tiết</h4>
+                <div class="suggestion-buttons">
+                    <button class="suggestion-btn" data-event="hot">
+                        <i class="fas fa-sun"></i>
+                        Trời nóng
+                    </button>
+                    <button class="suggestion-btn" data-event="cold">
+                        <i class="fas fa-snowflake"></i>
+                        Trời lạnh
+                    </button>
+                    <button class="suggestion-btn" data-event="rain">
+                        <i class="fas fa-cloud-rain"></i>
+                        Trời mưa
+                    </button>
+                </div>
             </div>
         </div>
+
+        <div class="chatbot-input">
+            <input type="text" id="chatbotInput" placeholder="Nhập câu hỏi của bạn...">
+            <button id="sendMessage">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
     </div>
+</div>
 
     <!-- Footer -->
     <footer class="footer">

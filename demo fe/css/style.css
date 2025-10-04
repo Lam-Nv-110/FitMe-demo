@@ -1264,3 +1264,427 @@ img[src=""] {
     text-decoration: none;
     margin-top: auto;
 }
+/* Chatbot Logo Styles */
+.chatbot-icon {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    border: 3px solid white;
+    overflow: hidden;
+}
+
+.chatbot-logo {
+    width: 80%;
+    height: 80%;
+    object-fit: contain;
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+}
+
+.chatbot-icon:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.chatbot-icon:hover .chatbot-logo {
+    transform: scale(1.05);
+}
+
+/* Chatbot Header với Avatar */
+.chatbot-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.chatbot-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.chatbot-avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.chatbot-info {
+    flex: 1;
+}
+
+.chatbot-info h3 {
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+.chatbot-info p {
+    margin: 0;
+    font-size: 0.8rem;
+    opacity: 0.9;
+}
+
+/* Chatbot Window Improvements */
+.chatbot-window {
+    position: absolute;
+    bottom: 80px;
+    right: 0;
+    width: 350px;
+    height: 500px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid #e0e0e0;
+}
+
+.chatbot-window.active {
+    display: flex;
+}
+
+/* Responsive cho chatbot */
+@media (max-width: 768px) {
+    .chatbot-icon {
+        width: 60px;
+        height: 60px;
+        bottom: 20px;
+        right: 20px;
+    }
+    
+    .chatbot-window {
+        width: 300px;
+        height: 450px;
+        bottom: 70px;
+        right: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .chatbot-icon {
+        width: 55px;
+        height: 55px;
+    }
+    
+    .chatbot-window {
+        width: 280px;
+        height: 400px;
+        right: 5px;
+    }
+}
+/* Chatbot Suggestions */
+.chatbot-suggestions {
+    padding: 1rem;
+    background: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.suggestion-category {
+    margin-bottom: 1rem;
+}
+
+.suggestion-category:last-child {
+    margin-bottom: 0;
+}
+
+.suggestion-category h4 {
+    margin: 0 0 0.5rem 0;
+    font-size: 0.8rem;
+    color: #6c757d;
+    font-weight: 600;
+}
+
+.suggestion-buttons {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.4rem;
+}
+
+.suggestion-btn {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 0.5rem 0.3rem;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+    text-align: center;
+    color: #495057;
+}
+
+.suggestion-btn:hover {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+}
+
+.suggestion-btn i {
+    font-size: 0.9rem;
+}
+
+/* Adjust chatbot window height for suggestions */
+.chatbot-window {
+    height: 550px; /* Tăng chiều cao để chứa suggestions */
+}
+
+.chatbot-messages {
+    max-height: 250px; /* Giảm chiều cao messages để nhường chỗ cho suggestions */
+}
+
+/* Responsive suggestions */
+@media (max-width: 480px) {
+    .suggestion-buttons {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .suggestion-btn {
+        font-size: 0.7rem;
+        padding: 0.4rem 0.2rem;
+    }
+    
+    .chatbot-window {
+        height: 500px;
+    }
+    
+    .chatbot-messages {
+        max-height: 200px;
+    }
+}
+
+/* Scrollbar cho suggestions */
+.chatbot-suggestions::-webkit-scrollbar {
+    width: 4px;
+}
+
+.chatbot-suggestions::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 2px;
+}
+
+.chatbot-suggestions::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 2px;
+}
+
+.chatbot-suggestions::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+/* Outfit Suggestions in Chat */
+.outfit-suggestions {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 1rem;
+    margin: 0.5rem 0;
+    border-left: 4px solid var(--primary-color);
+}
+
+.suggestion-header {
+    margin-bottom: 0.75rem;
+    font-size: 0.9rem;
+}
+
+.outfit-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.outfit-item-suggestion {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    background: white;
+    border-radius: 6px;
+    border: 1px solid #e9ecef;
+    font-size: 0.85rem;
+}
+
+.outfit-item-suggestion i {
+    color: var(--primary-color);
+    width: 16px;
+}
+
+.suggestion-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.action-btn {
+    flex: 1;
+    padding: 0.5rem 0.75rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3rem;
+}
+
+.try-on-btn {
+    background: var(--primary-color);
+    color: white;
+}
+
+.try-on-btn:hover {
+    background: #ff5252;
+}
+
+.shop-btn {
+    background: var(--secondary-color);
+    color: white;
+}
+
+.shop-btn:hover {
+    background: #3dc4b9;
+}
+/* Thêm vào cuối file style.css */
+
+/* Sửa màu chữ khi user chat - tránh trùng màu background */
+.user-message {
+    align-self: flex-end;
+    background-color: var(--primary-color);
+    color: white; /* Đảm bảo chữ màu trắng */
+    border-top-right-radius: 5px;
+    margin-left: auto;
+}
+
+/* Cải thiện độ tương phản cho bot message */
+.bot-message {
+    align-self: flex-start;
+    background-color: var(--light-gray);
+    color: #333; /* Màu chữ tối để dễ đọc */
+    border-top-left-radius: 5px;
+}
+
+/* Chatbot Suggestions - Ẩn/Hiện thông minh */
+.chatbot-suggestions {
+    padding: 1rem;
+    background: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+    max-height: 0;
+    overflow-y: auto;
+    transition: all 0.3s ease;
+    opacity: 0;
+    visibility: hidden;
+}
+
+/* Hiển thị suggestions khi có class 'visible' */
+.chatbot-suggestions.visible {
+    max-height: 200px;
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Hiệu ứng khi di chuột xuống vùng suggestions */
+.chatbot-messages:hover + .chatbot-suggestions,
+.chatbot-suggestions:hover {
+    max-height: 200px;
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Tự động ẩn suggestions khi có tin nhắn mới từ bot */
+.chatbot-messages:has(.bot-message:last-child) + .chatbot-suggestions {
+    max-height: 100px; /* Chỉ hiển thị 1 phần */
+    opacity: 0.7;
+}
+
+/* Khi hover vào suggestions bị ẩn 1 phần thì hiển thị đầy đủ */
+.chatbot-messages:has(.bot-message:last-child) + .chatbot-suggestions:hover {
+    max-height: 200px;
+    opacity: 1;
+}
+
+/* Scrollbar styling cho suggestions */
+.chatbot-suggestions::-webkit-scrollbar {
+    width: 4px;
+}
+
+.chatbot-suggestions::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 2px;
+}
+
+.chatbot-suggestions::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 2px;
+}
+
+.chatbot-suggestions::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* Điều chỉnh chiều cao chatbot window */
+.chatbot-window {
+    height: 500px; /* Giảm chiều cao tổng thể */
+}
+
+.chatbot-messages {
+    flex: 1;
+    max-height: none; /* Bỏ max-height cũ */
+    overflow-y: auto;
+    padding: 1rem;
+}
+
+/* Style cho input area */
+.chatbot-input {
+    flex-shrink: 0;
+    padding: 1rem;
+    border-top: 1px solid var(--light-gray);
+    background: white;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+    .chatbot-suggestions.visible {
+        max-height: 150px;
+    }
+    
+    .chatbot-messages:has(.bot-message:last-child) + .chatbot-suggestions {
+        max-height: 80px;
+    }
+    
+    .suggestion-buttons {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Hiệu ứng mượt mà cho suggestions */
+.suggestion-category {
+    margin-bottom: 1rem;
+    transition: opacity 0.3s ease;
+}
+
+.chatbot-messages:has(.bot-message:last-child) + .chatbot-suggestions .suggestion-category {
+    opacity: 0.8;
+}
+
+.chatbot-messages:has(.bot-message:last-child) + .chatbot-suggestions:hover .suggestion-category {
+    opacity: 1;
+}
