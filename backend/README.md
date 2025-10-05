@@ -1,6 +1,6 @@
 # FitMe Backend
 
-Backend demo cho FitMe
+Backend demo cho ứng dụng **FitMe** sử dụng RapidAPI.
 
 ## 🚀 Cách chạy
 
@@ -12,7 +12,7 @@ npm install
 node server.js
 ```
 
-Tạo file `.env` ( ib tôi lấy file nhé ):
+Tạo file `.env` (ib tôi để lấy file):
 
 ```env
 PORT=5000
@@ -21,6 +21,18 @@ CLOUDINARY_CLOUD_NAME=your_cloudinary_name
 CLOUDINARY_API_KEY=your_cloudinary_api_key
 CLOUDINARY_API_SECRET=your_cloudinary_api_secret
 ```
+
+## ⚙️ Cách hoạt động của backend
+
+1. Frontend upload 2 file:
+   - `userImage`: ảnh người
+   - `productImage`: ảnh quần áo
+2. Backend dùng **Multer** lưu tạm file.
+3. Backend upload ảnh tạm lên **Cloudinary** để có URL công khai.
+4. Gọi **RapidAPI `/try-on-url`** với URL ảnh vừa upload.
+5. Nhận kết quả ảnh từ RapidAPI (base64/binary).
+6. Upload kết quả lên Cloudinary để có URL.
+7. Trả JSON chứa `generated_image_url` về cho frontend.
 
 ## 📡 API
 
