@@ -1,61 +1,101 @@
-// Nạp thư viện cần thiết
-const express = require("express");   // Framework để tạo server và định nghĩa API
-const cors = require("cors");         // Cho phép frontend (React/Next.js) gọi API từ backend
-const axios = require("axios");       // Thư viện để gọi API bên ngoài (ở đây là RapidAPI)
-require("dotenv").config();           // Đọc biến môi trường từ file .env
+// =======================
+// server.js
+// =======================
 
-// Khởi tạo ứng dụng Express
+// 1️⃣ Nạp các thư viện cần thiết
+const express = require("express");       // Framework tạo server và API
+const cors = require("cors");             // Bật CORS để frontend gọi API
+const https = require("https");           // Client HTTPS native của Node.js
+const qs = require("querystring");        // Encode dữ liệu dạng x-www-form-urlencoded
+require("dotenv").config();               // Đọc biến môi trường từ file .env
+
+// 2️⃣ Khởi tạo Express app
 const app = express();
-const PORT = process.env.PORT || 5000; // Lấy PORT từ .env, mặc định 5000
+const PORT = process.env.PORT || 5000;
 
-// Middleware
-app.use(cors());           // Bật CORS để frontend gọi API không bị chặn
-app.use(express.json());   // Cho phép server hiểu dữ liệu JSON trong body request
+// 3️⃣ Middleware
+app.use(cors());            // Cho phép frontend gọi API
+app.use(express.json());    // Parse JSON body từ request
 
-// ✅ Route test đơn giản để check server có chạy hay không
+// =======================
+// 4️⃣ Route test nhanh
+// =======================
 app.get("/ping", (req, res) => {
+  // Test server có chạy không
   res.json({ message: "pong" });
-  // Khi bạn gọi http://localhost:5000/ping
-  // Nó sẽ trả về {"message":"pong"}
 });
 
-// ✅ Route chính để gọi Try-On Diffusion API từ RapidAPI
-app.post("/tryon", async (req, res) => {
-  // Lấy dữ liệu user gửi lên (ảnh người và ảnh sản phẩm)
-  // Frontend sẽ gửi JSON dạng:
-  // { "userImage": "https://...", "productImage": "https://..." }
+// =======================
+// 5️⃣ Route Try-On Diffusion
+// =======================
+app.post("/tryon", (req, res) => {
+  // 5.1 Lấy dữ liệu từ frontend
   const { userImage, productImage } = req.body;
 
-  try {
-    // Cấu hình request để gửi lên RapidAPI
-    const options = {
-      method: 'POST',
-      url: 'https://try-on-diffusion.p.rapidapi.com/try-on-url',
-      headers: {
-        'content-type': 'application/json',
-        'X-RapidAPI-Key': process.env.RAPIDAPI_KEY,   // Lấy key từ file .env
-        'X-RapidAPI-Host': 'try-on-diffusion.p.rapidapi.com'
-      },
-      data: {
-        cloth_image_url: productImage, // URL ảnh áo quần
-        human_image_url: userImage     // URL ảnh người dùng
-      }
-    };
-
-    // Gửi request đến RapidAPI
-    const response = await axios.request(options);
-
-    // Trả kết quả từ RapidAPI về cho frontend
-    res.json(response.data);
-
-  } catch (error) {
-    // Nếu có lỗi, in ra console và trả về status 500
-    console.error(error.response ? error.response.data : error.message);
-    res.status(500).json({ error: "API call failed" });
+  if (!userImage || !productImage) {
+    // Nếu frontend gửi thiếu dữ liệu, trả về 400
+    return res.status(400).json({ error: "userImage và productImage là bắt buộc" });
   }
+
+  console.log("Received from frontend:", { userImage, productImage });
+
+  // 5.2 Encode dữ liệu theo chuẩn x-www-form-urlencoded
+  const postData = qs.stringify({
+    human_image_url: userImage,   // URL ảnh người dùng
+    cloth_image_url: productImage // URL ảnh sản phẩm
+  });
+
+  // 5.3 Cấu hình request HTTPS
+  const options = {
+    method: "POST",
+    hostname: "try-on-diffusion.p.rapidapi.com",
+    path: "/try-on-url",
+    headers: {
+      "x-rapidapi-key": process.env.RAPIDAPI_KEY,   // Key RapidAPI từ .env
+      "x-rapidapi-host": "try-on-diffusion.p.rapidapi.com",
+      "Content-Type": "application/x-www-form-urlencoded",
+      "Content-Length": Buffer.byteLength(postData) // Bắt buộc nếu dùng POST
+    }
+  };
+
+  // 5.4 Tạo request
+  const apiReq = https.request(options, (apiRes) => {
+    const chunks = [];
+
+    // 5.5 Khi nhận dữ liệu từ RapidAPI
+    apiRes.on("data", (chunk) => {
+      chunks.push(chunk);
+    });
+
+    // 5.6 Khi dữ liệu nhận xong
+    apiRes.on("end", () => {
+      const body = Buffer.concat(chunks).toString();
+      try {
+        // Parse JSON trả về từ RapidAPI
+        const json = JSON.parse(body);
+        res.json(json); // Trả về frontend
+      } catch (err) {
+        // Nếu RapidAPI trả về không phải JSON
+        console.error("Parsing error:", err.message);
+        res.status(500).json({ error: "Invalid response from RapidAPI", raw: body });
+      }
+    });
+  });
+
+  // 5.7 Bắt lỗi request
+  apiReq.on("error", (err) => {
+    console.error("Request error:", err.message);
+    res.status(500).json({ error: err.message });
+  });
+
+  // 5.8 Gửi dữ liệu lên RapidAPI
+  apiReq.write(postData);
+  apiReq.end();
 });
 
-// ✅ Khởi động server
+// =======================
+// 6️⃣ Khởi động server
+// =======================
 app.listen(PORT, () => {
   console.log(`🚀 Backend running at http://localhost:${PORT}`);
 });
