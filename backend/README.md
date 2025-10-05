@@ -12,7 +12,7 @@ npm install
 node server.js
 ```
 
-Tạo file `.env`:
+Tạo file `.env` ( ib tôi lấy file nhé ):
 
 ```env
 PORT=5000
