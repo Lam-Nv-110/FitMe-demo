@@ -74,8 +74,8 @@ app.post(
 
       // 6.4 Chuẩn bị dữ liệu cho RapidAPI (/try-on-url)
       const postData = qs.stringify({
-        human_image_url: userImageUrl,
-        cloth_image_url: productImageUrl
+        avatar_image_url: userImageUrl,
+        clothing_image_url: productImageUrl
       });
 
       const options = {
