@@ -2,113 +2,138 @@
 // server.js
 // =======================
 
-// 1️⃣ Nạp các thư viện cần thiết
-const express = require("express");       // Framework tạo server và API
-const cors = require("cors");             // Cho phép frontend gọi API
-const https = require("https");           // Client HTTPS native của Node.js
-const fs = require("fs");                 // Đọc/ghi file
-const path = require("path");             // Hỗ trợ xử lý đường dẫn
-const multer = require("multer");         // Middleware nhận file từ request
-const FormData = require("form-data");    // Gửi form-data lên RapidAPI
+// 1️⃣ Import thư viện cần thiết
+const express = require("express");       // Tạo server backend
+const cors = require("cors");             // Cho phép frontend gọi API từ domain khác
+const https = require("https");           // Dùng để gọi RapidAPI (HTTPS request)
+const qs = require("querystring");        // Encode dữ liệu dạng form-urlencoded
+const multer = require("multer");         // Nhận file upload từ frontend
+const cloudinary = require("cloudinary").v2; // Upload ảnh lên Cloudinary
 require("dotenv").config();               // Đọc biến môi trường từ file .env
 
-// 2️⃣ Khởi tạo Express app
+// 2️⃣ Cấu hình Cloudinary bằng thông tin từ .env
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME, // Tên cloud (dashboard)
+  api_key: process.env.CLOUDINARY_API_KEY,       // API Key (dashboard)
+  api_secret: process.env.CLOUDINARY_API_SECRET  // API Secret (dashboard)
+});
+
+// 3️⃣ Cấu hình Multer để lưu file tạm (trong thư mục /uploads)
+// Backend chỉ cần file tạm để upload lên Cloudinary, sau đó có thể xoá
+const upload = multer({ dest: "uploads/" });
+
+// 4️⃣ Khởi tạo ứng dụng Express
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// 3️⃣ Middleware
-app.use(cors());
-app.use(express.json());
-
-// 4️⃣ Cho phép phục vụ file tĩnh trong thư mục public/
-app.use(express.static("public"));
-
-// 5️⃣ Cấu hình multer (lưu file tạm trong thư mục uploads/)
-const upload = multer({ dest: "uploads/" });
+// Middleware
+app.use(cors());          // Cho phép mọi origin gọi API
+app.use(express.json());  // Parse body JSON (cho route khác nếu cần)
 
 // =======================
-// 6️⃣ Route test nhanh
+// 5️⃣ Route test nhanh
 // =======================
 app.get("/ping", (req, res) => {
-  res.json({ message: "pong" });
+  res.json({ message: "pong" }); // Test server hoạt động
 });
 
 // =======================
-// 7️⃣ Route Try-On Diffusion (dùng file upload)
+// 6️⃣ Route Try-On chính
 // =======================
-//
-// Expect: gửi form-data với 2 file
-// - human_image_file
-// - cloth_image_file
-// =======================
-app.post("/tryonfile", upload.fields([
-  { name: "human_image_file", maxCount: 1 },
-  { name: "cloth_image_file", maxCount: 1 }
-]), (req, res) => {
-  // 7.1 Kiểm tra file có được upload không
-  if (!req.files || !req.files.human_image_file || !req.files.cloth_image_file) {
-    return res.status(400).json({ error: "Thiếu file human_image_file hoặc cloth_image_file" });
-  }
+// Frontend sẽ upload 2 file: userImage (ảnh người), productImage (ảnh áo/quần)
+// Backend sẽ upload ảnh đó lên Cloudinary để có URL
+// Sau đó gọi RapidAPI (/try-on-url) với URL ảnh
+// Nhận kết quả ảnh → upload lại Cloudinary → trả URL cho frontend
+app.post(
+  "/tryon",
+  upload.fields([
+    { name: "userImage", maxCount: 1 },     // Nhận 1 file userImage
+    { name: "productImage", maxCount: 1 }   // Nhận 1 file productImage
+  ]),
+  async (req, res) => {
+    try {
+      // 6.1 Kiểm tra xem có file được gửi lên không
+      if (!req.files?.userImage || !req.files?.productImage) {
+        return res.status(400).json({ error: "Cần upload userImage và productImage" });
+      }
 
-  console.log("✅ Files received:", req.files);
+      console.log("📂 Nhận file từ frontend:", Object.keys(req.files));
 
-  // 7.2 Tạo form-data gửi lên RapidAPI
-  const form = new FormData();
-  form.append("human_image_file", fs.createReadStream(req.files.human_image_file[0].path));
-  form.append("cloth_image_file", fs.createReadStream(req.files.cloth_image_file[0].path));
+      // 6.2 Lấy đường dẫn file tạm
+      const userImagePath = req.files.userImage[0].path;
+      const productImagePath = req.files.productImage[0].path;
 
-  // 7.3 Cấu hình request HTTPS đến RapidAPI
-  const options = {
-    method: "POST",
-    hostname: "try-on-diffusion.p.rapidapi.com",
-    path: "/try-on-file", // endpoint upload file
-    headers: {
-      ...form.getHeaders(),
-      "x-rapidapi-key": process.env.RAPIDAPI_KEY,
-      "x-rapidapi-host": "try-on-diffusion.p.rapidapi.com"
-    }
-  };
+      // 6.3 Upload file tạm lên Cloudinary để có URL công khai
+      const userUpload = await cloudinary.uploader.upload(userImagePath, { resource_type: "image" });
+      const productUpload = await cloudinary.uploader.upload(productImagePath, { resource_type: "image" });
 
-  // 7.4 Gửi request đến RapidAPI
-  const apiReq = https.request(options, (apiRes) => {
-    const chunks = [];
+      const userImageUrl = userUpload.secure_url;       // URL ảnh người
+      const productImageUrl = productUpload.secure_url; // URL ảnh áo/quần
 
-    apiRes.on("data", (chunk) => {
-      chunks.push(chunk);
-    });
+      console.log("☁️ Upload lên Cloudinary thành công:", { userImageUrl, productImageUrl });
 
-    apiRes.on("end", () => {
-      const buffer = Buffer.concat(chunks);
-
-      // 7.5 Lưu file trả về vào public/
-      const fileName = `output_${Date.now()}.png`;
-      const filePath = path.join(__dirname, "public", fileName);
-
-      fs.writeFile(filePath, buffer, (err) => {
-        if (err) {
-          console.error("❌ Lỗi khi lưu file:", err);
-          return res.status(500).json({ error: "Không lưu được ảnh" });
-        }
-
-        // 7.6 Trả về URL ảnh cho frontend/Postman
-        const imageUrl = `http://localhost:${PORT}/${fileName}`;
-        res.json({ generated_image_url: imageUrl });
+      // 6.4 Chuẩn bị dữ liệu cho RapidAPI (/try-on-url)
+      const postData = qs.stringify({
+        human_image_url: userImageUrl,
+        cloth_image_url: productImageUrl
       });
-    });
-  });
 
-  // 7.7 Gửi form-data lên RapidAPI
-  form.pipe(apiReq);
+      const options = {
+        method: "POST",
+        hostname: "try-on-diffusion.p.rapidapi.com",
+        path: "/try-on-url", // RapidAPI endpoint (chỉ nhận URL ảnh)
+        headers: {
+          "x-rapidapi-key": process.env.RAPIDAPI_KEY,   // Key lấy từ .env
+          "x-rapidapi-host": "try-on-diffusion.p.rapidapi.com",
+          "Content-Type": "application/x-www-form-urlencoded",
+          "Content-Length": Buffer.byteLength(postData)
+        }
+      };
 
-  // 7.8 Bắt lỗi
-  apiReq.on("error", (err) => {
-    console.error("❌ Request error:", err.message);
-    res.status(500).json({ error: err.message });
-  });
-});
+      // 6.5 Tạo request đến RapidAPI
+      const apiReq = https.request(options, (apiRes) => {
+        const chunks = [];
+
+        // Nhận từng phần dữ liệu ảnh (binary)
+        apiRes.on("data", (chunk) => chunks.push(chunk));
+
+        // Khi đã nhận xong toàn bộ dữ liệu
+        apiRes.on("end", () => {
+          const buffer = Buffer.concat(chunks); // Gom tất cả binary thành buffer
+
+          // 6.6 Upload ảnh kết quả lên Cloudinary để có URL
+          cloudinary.uploader
+            .upload_stream({ resource_type: "image" }, (error, result) => {
+              if (error) {
+                console.error("❌ Upload Cloudinary lỗi:", error);
+                return res.status(500).json({ error: "Không upload được ảnh kết quả" });
+              }
+
+              // 6.7 Trả URL ảnh kết quả về cho frontend
+              res.json({ generated_image_url: result.secure_url });
+            })
+            .end(buffer); // Gửi buffer ảnh vào stream upload
+        });
+      });
+
+      // 6.8 Bắt lỗi nếu request RapidAPI fail
+      apiReq.on("error", (err) => {
+        console.error("❌ Lỗi gọi RapidAPI:", err.message);
+        res.status(500).json({ error: err.message });
+      });
+
+      // 6.9 Gửi dữ liệu (URL ảnh) cho RapidAPI
+      apiReq.write(postData);
+      apiReq.end();
+    } catch (err) {
+      console.error("❌ Backend error:", err);
+      res.status(500).json({ error: "Có lỗi khi xử lý" });
+    }
+  }
+);
 
 // =======================
-// 8️⃣ Khởi động server
+// 7️⃣ Khởi động server
 // =======================
 app.listen(PORT, () => {
   console.log(`🚀 Backend running at http://localhost:${PORT}`);
