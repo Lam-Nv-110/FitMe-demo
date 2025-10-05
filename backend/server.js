@@ -32,7 +32,7 @@ app.post("/tryon", async (req, res) => {
       method: 'POST',
       url: 'https://try-on-diffusion.p.rapidapi.com/try-on-url',
       headers: {
-        'content-type': 'application/x-www-form-urlencoded',
+        'content-type': 'application/json',
         'X-RapidAPI-Key': process.env.RAPIDAPI_KEY,   // Lấy key từ file .env
         'X-RapidAPI-Host': 'try-on-diffusion.p.rapidapi.com'
       },
