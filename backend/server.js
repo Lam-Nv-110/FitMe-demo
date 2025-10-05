@@ -4,10 +4,12 @@
 
 // 1️⃣ Nạp các thư viện cần thiết
 const express = require("express");       // Framework tạo server và API
-const cors = require("cors");             // Bật CORS để frontend gọi API
+const cors = require("cors");             // Cho phép frontend gọi API
 const https = require("https");           // Client HTTPS native của Node.js
-const qs = require("querystring");        // Encode dữ liệu dạng x-www-form-urlencoded
-const fs = require("fs");                 // Lưu ảnh vào file
+const fs = require("fs");                 // Đọc/ghi file
+const path = require("path");             // Hỗ trợ xử lý đường dẫn
+const multer = require("multer");         // Middleware nhận file từ request
+const FormData = require("form-data");    // Gửi form-data lên RapidAPI
 require("dotenv").config();               // Đọc biến môi trường từ file .env
 
 // 2️⃣ Khởi tạo Express app
@@ -15,95 +17,98 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // 3️⃣ Middleware
-app.use(cors());            // Cho phép frontend gọi API
-app.use(express.json());    // Parse JSON body từ request
+app.use(cors());
+app.use(express.json());
+
+// 4️⃣ Cho phép phục vụ file tĩnh trong thư mục public/
+app.use(express.static("public"));
+
+// 5️⃣ Cấu hình multer (lưu file tạm trong thư mục uploads/)
+const upload = multer({ dest: "uploads/" });
 
 // =======================
-// 4️⃣ Route test nhanh
+// 6️⃣ Route test nhanh
 // =======================
 app.get("/ping", (req, res) => {
-  res.json({ message: "pong" }); // Test server có chạy không
+  res.json({ message: "pong" });
 });
 
 // =======================
-// 5️⃣ Route Try-On Diffusion (lưu file + trả base64)
+// 7️⃣ Route Try-On Diffusion (dùng file upload)
 // =======================
-app.post("/tryon", (req, res) => {
-  const { userImage, productImage } = req.body;
-
-  if (!userImage || !productImage) {
-    return res.status(400).json({ error: "userImage và productImage là bắt buộc" });
+//
+// Expect: gửi form-data với 2 file
+// - human_image_file
+// - cloth_image_file
+// =======================
+app.post("/tryonfile", upload.fields([
+  { name: "human_image_file", maxCount: 1 },
+  { name: "cloth_image_file", maxCount: 1 }
+]), (req, res) => {
+  // 7.1 Kiểm tra file có được upload không
+  if (!req.files || !req.files.human_image_file || !req.files.cloth_image_file) {
+    return res.status(400).json({ error: "Thiếu file human_image_file hoặc cloth_image_file" });
   }
 
-  console.log("Received from frontend:", { userImage, productImage });
+  console.log("✅ Files received:", req.files);
 
-  // 5.1 Encode dữ liệu x-www-form-urlencoded
-  const postData = qs.stringify({
-    human_image_url: userImage,
-    cloth_image_url: productImage
-  });
+  // 7.2 Tạo form-data gửi lên RapidAPI
+  const form = new FormData();
+  form.append("human_image_file", fs.createReadStream(req.files.human_image_file[0].path));
+  form.append("cloth_image_file", fs.createReadStream(req.files.cloth_image_file[0].path));
 
-  // 5.2 Cấu hình request HTTPS đến RapidAPI
+  // 7.3 Cấu hình request HTTPS đến RapidAPI
   const options = {
     method: "POST",
     hostname: "try-on-diffusion.p.rapidapi.com",
-    path: "/try-on-url", // endpoint trả ảnh
+    path: "/try-on-file", // endpoint upload file
     headers: {
+      ...form.getHeaders(),
       "x-rapidapi-key": process.env.RAPIDAPI_KEY,
-      "x-rapidapi-host": "try-on-diffusion.p.rapidapi.com",
-      "Content-Type": "application/x-www-form-urlencoded",
-      "Content-Length": Buffer.byteLength(postData)
+      "x-rapidapi-host": "try-on-diffusion.p.rapidapi.com"
     }
   };
 
-  // 5.3 Tạo request
+  // 7.4 Gửi request đến RapidAPI
   const apiReq = https.request(options, (apiRes) => {
     const chunks = [];
 
-    // 5.4 Khi nhận dữ liệu từ RapidAPI (binary)
     apiRes.on("data", (chunk) => {
       chunks.push(chunk);
     });
 
-    // 5.5 Khi dữ liệu nhận xong
     apiRes.on("end", () => {
-      const buffer = Buffer.concat(chunks); // Gom chunk thành Buffer
+      const buffer = Buffer.concat(chunks);
 
-      // 5.6 Lưu ảnh ra file
-      const fileName = "tryon_result.jpg";
-      fs.writeFile(fileName, buffer, (err) => {
+      // 7.5 Lưu file trả về vào public/
+      const fileName = `output_${Date.now()}.png`;
+      const filePath = path.join(__dirname, "public", fileName);
+
+      fs.writeFile(filePath, buffer, (err) => {
         if (err) {
-          console.error("Lỗi khi lưu file:", err);
-          return res.status(500).json({ error: "Cannot save image" });
+          console.error("❌ Lỗi khi lưu file:", err);
+          return res.status(500).json({ error: "Không lưu được ảnh" });
         }
-        console.log("✅ Ảnh đã lưu vào", fileName);
 
-        // 5.7 Chuyển Buffer sang base64 để frontend hiển thị trực tiếp
-        const base64Image = buffer.toString("base64");
-
-        // Trả về frontend: đường dẫn file + base64
-        res.json({
-          message: "Image saved successfully",
-          fileName: fileName,
-          generated_image_base64: base64Image
-        });
+        // 7.6 Trả về URL ảnh cho frontend/Postman
+        const imageUrl = `http://localhost:${PORT}/${fileName}`;
+        res.json({ generated_image_url: imageUrl });
       });
     });
   });
 
-  // 5.8 Bắt lỗi request
+  // 7.7 Gửi form-data lên RapidAPI
+  form.pipe(apiReq);
+
+  // 7.8 Bắt lỗi
   apiReq.on("error", (err) => {
-    console.error("Request error:", err.message);
+    console.error("❌ Request error:", err.message);
     res.status(500).json({ error: err.message });
   });
-
-  // 5.9 Gửi dữ liệu lên RapidAPI
-  apiReq.write(postData);
-  apiReq.end();
 });
 
 // =======================
-// 6️⃣ Khởi động server
+// 8️⃣ Khởi động server
 // =======================
 app.listen(PORT, () => {
   console.log(`🚀 Backend running at http://localhost:${PORT}`);
