@@ -34,6 +34,14 @@ CLOUDINARY_API_SECRET=your_cloudinary_api_secret
 6. Upload kết quả lên Cloudinary để có URL.
 7. Trả JSON chứa `generated_image_url` về cho frontend.
 
+### 💡 Tại sao backend không gửi file trực tiếp cho RapidAPI `/try-on-file`
+
+- `/try-on-file` cho phép gửi ảnh trực tiếp, nhưng nếu gửi 2 file lớn:
+  - RapidAPI phải xử lý toàn bộ file từ backend → **thời gian xử lý lâu**, đặc biệt với ảnh có dung lượng lớn.  
+  - Backend phải nhận trực tiếp nhị phân ảnh từ RapidAPI → **tốn bộ nhớ**, dễ gây lỗi hoặc timeout.  
+- Giải pháp hiện tại: backend upload ảnh lên Cloudinary và gửi URL cho RapidAPI `/try-on-url` → nhanh hơn, ổn định, dễ trả URL cho frontend.
+
+
 ## 📡 API
 
 ### Test server
