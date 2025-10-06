@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <!-- Cài đặt cơ bản và metadata -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitMe - Thử đồ AI & Mua sắm thời trang</title>
+    
+    <!-- Liên kết CSS và font awesome -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header với navigation chính -->
+    <header class="header">
+        <nav class="navbar">
+            <!-- Logo công ty -->
+            <div class="nav-logo">
+                <img src="images/logo.png" alt="FitMe">
+            </div>
+            
+            <!-- Menu điều hướng chính -->
+            <ul class="nav-menu">
+                <li><a href="#home">Trang chủ</a></li>
+                <li><a href="#ai-tryon">Thử đồ AI</a></li>
+                <li><a href="#shopping">Mua sắm</a></li>
+                <li><a href="#trends">Xu hướng</a></li>
+                <li><a href="#about">Về chúng tôi</a></li>
+            </ul>
+            
+            <!-- Actions: đăng nhập và giỏ hàng -->
+            <div class="nav-actions">
+                <button class="btn-login">Đăng nhập</button>
+                <div class="cart-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">0</span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section: Giới thiệu chính -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>Thử đồ với AI - Mặc đẹp mỗi ngày</h1>
+            <p>FitMe giúp bạn thử đồ ảo, tìm phong cách phù hợp và mua sắm dễ dàng</p>
+            <div class="hero-buttons">
+                <button class="btn-primary" onclick="scrollToSection('ai-tryon')">Thử đồ ngay</button>
+                <button class="btn-secondary" onclick="scrollToSection('shopping')">Khám phá cửa hàng</button>
+            </div>
+        </div>
+        <div class="hero-image">
+            <img src="images/hero-bg.jpg" alt="Thời trang FitMe">
+        </div>
+    </section>
+
+    <!-- AI Try-On Section: Tính năng thử đồ AI -->
+    <section id="ai-tryon" class="ai-tryon-section">
+        <div class="section-header">
+            <h2>Thử đồ với công nghệ AI</h2>
+            <p>Tải ảnh của bạn và thử bất kỳ bộ đồ nào từ bộ sưu tập của chúng tôi</p>
+        </div>
+        <div class="ai-tryon-container">
+            <!-- Khu vực upload ảnh người dùng -->
+            <div class="upload-area">
+                <div class="upload-box" id="uploadBox">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p>Tải ảnh của bạn lên</p>
+                    <input type="file" id="userImage" accept="image/*" hidden>
+                    <button class="btn-upload" onclick="document.getElementById('userImage').click()">Chọn ảnh</button>
+                </div>
+                <div class="user-image-preview" id="userImagePreview">
+                    <img id="previewImage" src="" alt="Ảnh của bạn">
+                </div>
+            </div>
+            
+            <!-- Phòng thử đồ ảo -->
+            <div class="virtual-dressing-room">
+                <!-- Lựa chọn trang phục -->
+                <div class="outfit-selection">
+                    <h3>Chọn trang phục</h3>
+                    <div class="outfit-categories">
+                        <button class="category-btn active" data-category="all">Tất cả</button>
+                        <button class="category-btn" data-category="tops">Áo</button>
+                        <button class="category-btn" data-category="bottoms">Quần</button>
+                        <button class="category-btn" data-category="dresses">Đầm/Váy</button>
+                        <button class="category-btn" data-category="accessories">Phụ kiện</button>
+                    </div>
+                    <div class="outfit-grid" id="outfitGrid">
+                        <!-- Outfits sẽ được tải bởi JavaScript -->
+                    </div>
+                </div>
+                
+                <!-- Kết quả thử đồ -->
+                <div class="try-on-result">
+                    <h3>Kết quả thử đồ</h3>
+                    <div class="result-container">
+                        <div class="result-image" id="resultImage">
+                            <p>Kết quả thử đồ sẽ hiển thị ở đây</p>
+                        </div>
+                        <button class="btn-try-on" id="tryOnBtn" disabled>Thử đồ</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Shopping Section: Mua sắm sản phẩm -->
+    <section id="shopping" class="shopping-section">
+        <div class="section-header">
+            <h2>Mua sắm thời trang</h2>
+            <p>Khám phá bộ sưu tập mới nhất từ FitMe</p>
+        </div>
+        
+        <!-- Bộ lọc sản phẩm -->
+        <div class="filters">
+            <div class="filter-group">
+                <label for="category">Danh mục:</label>
+                <select id="category">
+                    <option value="all">Tất cả</option>
+                    <option value="tops">Áo</option>
+                    <option value="bottoms">Quần</option>
+                    <option value="dresses">Đầm/Váy</option>
+                    <option value="accessories">Phụ kiện</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="price">Giá:</label>
+                <select id="price">
+                    <option value="all">Tất cả</option>
+                    <option value="0-200">Dưới 200k</option>
+                    <option value="200-500">200k - 500k</option>
+                    <option value="500-1000">500k - 1tr</option>
+                    <option value="1000+">Trên 1tr</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="size">Kích cỡ:</label>
+                <select id="size">
+                    <option value="all">Tất cả</option>
+                    <option value="S">S</option>
+                    <option value="M">M</option>
+                    <option value="L">L</option>
+                    <option value="XL">XL</option>
+                </select>
+            </div>
+        </div>
+        
+        <!-- Lưới sản phẩm -->
+        <div class="products-grid" id="productsGrid">
+            <!-- Products sẽ được tải bởi JavaScript -->
+        </div>
+        <div class="load-more">
+            <button class="btn-load-more" id="loadMoreBtn">Xem thêm</button>
+        </div>
+    </section>
+
+    <!-- Trends Section: Xu hướng thời trang -->
+    <section id="trends" class="trends-section">
+        <div class="section-header">
+            <h2>Xu hướng thời trang</h2>
+            <p>Cập nhật những xu hướng mới nhất</p>
+        </div>
+        <div class="trends-container">
+            <div class="trend-cards">
+                <!-- Card xu hướng 1 -->
+                <div class="trend-card">
+                    <div class="trend-image">
+                        <img src="images/trend1.jpg" alt="Xu hướng 1">
+                    </div>
+                    <div class="trend-content">
+                        <h3>Phong cách tối giản</h3>
+                        <p>Đơn giản nhưng không kém phần thời thượng</p>
+                        <a href="#" class="trend-link">Khám phá</a>
+                    </div>
+                </div>
+                <!-- Card xu hướng 2 -->
+                <div class="trend-card">
+                    <div class="trend-image">
+                        <img src="images/trend2.jpg" alt="Xu hướng 2">
+                    </div>
+                    <div class="trend-content">
+                        <h3>Streetwear nổi bật</h3>
+                        <p>Phong cách đường phố cá tính</p>
+                        <a href="#" class="trend-link">Khám phá</a>
+                    </div>
+                </div>
+                <!-- Card xu hướng 3 -->
+                <div class="trend-card">
+                    <div class="trend-image">
+                        <img src="images/trend3.jpg" alt="Xu hướng 3">
+                    </div>
+                    <div class="trend-content">
+                        <h3>Vintage cổ điển</h3>
+                        <p>Hoài cổ nhưng vẫn hiện đại</p>
+                        <a href="#" class="trend-link">Khám phá</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Chatbot Container: Trợ lý ảo Lumi -->
+    <div class="chatbot-container">
+        <!-- Icon chatbot floating -->
+        <div class="chatbot-icon" id="chatbotIcon">
+            <img src="images/chatbot-logo.png" alt="Trợ lý ảo Lumi" class="chatbot-logo">
+        </div>
+        
+        <!-- Cửa sổ chatbot -->
+        <div class="chatbot-window" id="chatbotWindow">
+            <!-- Header chatbot -->
+            <div class="chatbot-header">
+                <div class="chatbot-avatar">
+                    <img src="images/chatbot-logo.png" alt="Lumi Avatar" class="chatbot-avatar-img">
+                </div>
+                <div class="chatbot-info">
+                    <h3>Trợ lý ảo Lumi</h3>
+                    <p>Đang trực tuyến</p>
+                </div>
+                <button class="btn-close" id="closeChatbot">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <!-- Khu vực tin nhắn -->
+            <div class="chatbot-messages" id="chatbotMessages">
+                <div class="message bot-message">
+                    <p>Xin chào! Tôi là Lumi - trợ lý ảo của FitMe. Tôi có thể giúp gì cho bạn?</p>
+                </div>
+            </div>
+
+            <!-- Quick suggestions: Gợi ý nhanh cho người dùng -->
+            <div class="chatbot-suggestions">
+                <!-- Gợi ý theo dịp -->
+                <div class="suggestion-category">
+                    <h4>🎯 Gợi ý nhanh</h4>
+                    <div class="suggestion-buttons">
+                        <button class="suggestion-btn" data-event="interview">
+                            <i class="fas fa-briefcase"></i>
+                            Phỏng vấn
+                        </button>
+                        <button class="suggestion-btn" data-event="date">
+                            <i class="fas fa-heart"></i>
+                            Hẹn hò
+                        </button>
+                        <button class="suggestion-btn" data-event="party">
+                            <i class="fas fa-glass-cheers"></i>
+                            Tiệc tối
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Gợi ý dịp khác -->
+                <div class="suggestion-category">
+                    <h4>🛍️ Dịp khác</h4>
+                    <div class="suggestion-buttons">
+                        <button class="suggestion-btn" data-event="casual">
+                            <i class="fas fa-tshirt"></i>
+                            Dạo phố
+                        </button>
+                        <button class="suggestion-btn" data-event="travel">
+                            <i class="fas fa-suitcase"></i>
+                            Du lịch
+                        </button>
+                        <button class="suggestion-btn" data-event="wedding">
+                            <i class="fas fa-ring"></i>
+                            Đám cưới
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Gợi ý theo thời tiết -->
+                <div class="suggestion-category">
+                    <h4>🌤️ Thời tiết</h4>
+                    <div class="suggestion-buttons">
+                        <button class="suggestion-btn" data-event="hot">
+                            <i class="fas fa-sun"></i>
+                            Trời nóng
+                        </button>
+                        <button class="suggestion-btn" data-event="cold">
+                            <i class="fas fa-snowflake"></i>
+                            Trời lạnh
+                        </button>
+                        <button class="suggestion-btn" data-event="rain">
+                            <i class="fas fa-cloud-rain"></i>
+                            Trời mưa
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input area cho chatbot -->
+            <div class="chatbot-input">
+                <input type="text" id="chatbotInput" placeholder="Nhập câu hỏi của bạn...">
+                <button id="sendMessage">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer: Thông tin liên hệ và liên kết -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>FitMe</h3>
+                <p>Ứng dụng thử đồ AI và mua sắm thời trang hàng đầu</p>
+            </div>
+            <div class="footer-section">
+                <h4>Liên kết</h4>
+                <ul>
+                    <li><a href="#home">Trang chủ</a></li>
+                    <li><a href="#ai-tryon">Thử đồ AI</a></li>
+                    <li><a href="#shopping">Mua sắm</a></li>
+                    <li><a href="#trends">Xu hướng</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Hỗ trợ</h4>
+                <ul>
+                    <li><a href="#">Trung tâm trợ giúp</a></li>
+                    <li><a href="#">Liên hệ</a></li>
+                    <li><a href="#">Chính sách bảo mật</a></li>
+                    <li><a href="#">Điều khoản sử dụng</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Theo dõi chúng tôi</h4>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-tiktok"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 FitMe. Tất cả các quyền được bảo lưu.</p>
+        </div>
+    </footer>
+
+    <!-- Liên kết JavaScript files -->
+    <script src="js/main.js"></script>
+    <script src="js/ai-tryon.js"></script>
+    <script src="js/chatbot.js"></script>
+    <script src="js/assistant.js"></script> 
+</body>
+</html>
