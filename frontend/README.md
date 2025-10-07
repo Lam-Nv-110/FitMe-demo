@@ -15,6 +15,7 @@ FitMe Backend đang chạy
 npm install -g http-server
 # chạy html
 http-server
+```
 # 🚀 Tính năng nổi bật
 
 1.Thử đồ AI (AI Try-on): Cho phép người dùng tải lên ảnh và xem trước trang phục mới trên người mẫu ảo một cách thực tế.
