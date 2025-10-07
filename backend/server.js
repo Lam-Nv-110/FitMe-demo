@@ -29,6 +29,7 @@ const PORT = process.env.PORT || 5000;
 // Middleware
 app.use(cors());          // Cho phép mọi origin gọi API
 app.use(express.json());  // Parse body JSON (cho route khác nếu cần)
+app.use(express.static("frontend")); // Phục vụ file tĩnh (nếu cần)
 
 // =======================
 // 5️⃣ Route test nhanh
