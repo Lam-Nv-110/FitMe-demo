@@ -68,7 +68,7 @@ Frontend sau đó sử dụng URL này để hiển thị ảnh kết quả th�
 
 # 📁 Cấu trúc Dự án
 Dưới đây là cấu trúc thư mục cốt lõi của dự án:
-
+```
 fitme-frontend/
 ├── css/
 │   ├── style.css             # Tập tin CSS chính cho giao diện
@@ -80,3 +80,4 @@ fitme-frontend/
 ├── images/
 └── index.html                # Trang chủ và cấu trúc chính
 └── README.md                 # Tệp này
+```
