@@ -2074,7 +2074,7 @@ img[src=""] {
 
 /* Trong phần Chatbot Header với Avatar */
 .chatbot-header {
-    background: linear-gradient(135deg, #ff8d02 0%, #efb145 100%); /* Đã đổi sang CAM */
+    background: linear-gradient(135deg, #ff8d02 0%, #ff8d02 100%); /* Đã đổi sang CAM */
     color: white;
     padding: 1rem;
     display: flex;
@@ -2095,7 +2095,7 @@ img[src=""] {
 
 /* Trong phần Chatbot Suggestions */
 .suggestion-btn:hover {
-    background: #FF8C00; /* Đã đổi sang CAM */
+    background: #ff8c00; /* Đã đổi sang CAM */
     color: white;
     border-color: #FF8C00; /* Đã đổi sang CAM */
     transform: translateY(-1px);
@@ -2123,4 +2123,12 @@ img[src=""] {
 
 .try-on-btn:hover {
     background: #E67A00; /* Orange đậm hơn khi hover */
+}
+/* Sửa màu chữ khi user chat - tránh trùng màu background */
+.user-message {
+    align-self: flex-end;
+    background-color: #ff8c00; /* Màu mới: Dark Orange */
+    color: white; /* Đảm bảo chữ màu trắng */
+    border-top-right-radius: 5px;
+    margin-left: auto;
 }
