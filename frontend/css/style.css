@@ -2056,3 +2056,71 @@ img[src=""] {
 .chatbot-messages:has(.bot-message:last-child) + .chatbot-suggestions:hover .suggestion-category {
     opacity: 1;
 }
+/* Trong phần Chatbot Logo Styles */
+.chatbot-icon {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, #ff8d02 0%, #ffffff 100%); /* Đã đổi sang CAM */
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    border: 3px solid white;
+    overflow: hidden;
+}
+
+/* Trong phần Chatbot Header với Avatar */
+.chatbot-header {
+    background: linear-gradient(135deg, #ff8d02 0%, #efb145 100%); /* Đã đổi sang CAM */
+    color: white;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+/* Trong phần Chatbot Input */
+.chatbot-input button {
+    background-color: #FF8C00; /* Đã đổi sang CAM */
+    color: white;
+    width: 40px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Trong phần Chatbot Suggestions */
+.suggestion-btn:hover {
+    background: #FF8C00; /* Đã đổi sang CAM */
+    color: white;
+    border-color: #FF8C00; /* Đã đổi sang CAM */
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(255, 140, 0, 0.5); /* Box shadow màu cam */
+}
+
+/* Trong phần Outfit Suggestions in Chat */
+.outfit-suggestions {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 1rem;
+    margin: 0.5rem 0;
+    border-left: 4px solid #FF8C00; /* Đã đổi sang CAM */
+}
+
+.outfit-item-suggestion i {
+    color: #FF8C00; /* Đã đổi sang CAM */
+    width: 16px;
+}
+
+.try-on-btn {
+    background: #FF8C00; /* Đã đổi sang CAM */
+    color: white;
+}
+
+.try-on-btn:hover {
+    background: #E67A00; /* Orange đậm hơn khi hover */
+}
